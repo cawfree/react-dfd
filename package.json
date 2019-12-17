@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "immutable": "^4.0.0-rc.12",
+    "react-cola": "^0.0.4",
     "react-dataflow": "^0.3.1",
     "react-use-mutator": "^0.0.1",
     "uuid": "^3.3.3"
