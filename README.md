@@ -47,7 +47,7 @@ In this example, we'll hook up a simple switch to a light emitting diode. This i
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useWire } from 'react-dataflow';
-import Bulb from 'react-bulb'; // grab an LED
+import Bulb from 'react-bulb';
 import Switch from 'react-switch';
 
 import { withFlow, withFlowDiagram } from 'react-dfd';
@@ -63,8 +63,13 @@ const LightBulb = ({ active }) => (
 
 // XXX: It is important to know the size of the component
 //      before rendering, so we need to provide the width
-//      and height.
-LightBulb.diagramProps = {
+//      and height. These are done using "flowProps"; they
+//      are very similar to propTypes; in fact, they actually
+//      resolve the propTypes for you. But they provide some
+//      additional information which help with constructing
+//      the diagram which must be known before they are
+//      instantiated.
+LightBulb.flowProps = {
   width: 40,
   height: 40,
   // XXX: Inlets describe the configuration of input props which
@@ -100,7 +105,7 @@ const Toggle = ({ Export }) => {
   );
 };
 
-Toggle.diagramProps = {
+Toggle.flowProps = {
   width: 55,
   height: 28,
   outlets: {
@@ -135,6 +140,55 @@ export default withFlowDiagram(
   ),
 );
 ```
+
+## API
+
+[react-dfd]() implements a small range of public operations and concepts to achieve some complex operations in dataflow. In truth, you only really care about three basic concepts; `flowProps`, `withFlow` and `withFlowDiagram`, which are described in detail below.
+
+### flowProps
+These are a `static` class variable which describe some required properties to achieve dataflow about a particular React Component. These usually come in the following form:
+
+```javascript
+SomeComponent.flowProps = {
+  width: 100,
+  height: 100,
+  inlets: {
+    A: { PropTypes.bool, React.Fragment, { left: 5 } },
+  },
+  outlets: {
+    B: { PropTypes.bool, React.Fragment, { left: 25 } },
+  },
+};
+```
+
+Any component which we want to use on the diagram **must** at the bear minimum define `flowProps`, which define numeric non-zero, non-negative `width` and `height` properties. These are used to _inform_ the diagram distirbution engine of the target size of the components _before they are rendered_; this is key in order to generate collision-free distributions on the dataflow diagram.
+
+There are in addition, two optional object properties which can be specified; `inlets` and `outlets`. These respectively describe the inputs and outputs properties the component is _expected_ to be passed using wires on the diagram. They are designed to emulate how we normally expect [PropTypes](https://reactjs.org/docs/typechecking-with-proptypes.html) to work; in essence, we define specific property keys of the component, which when wired, are expected to carry a certain value which conforms the the type checking rule.
+
+Alongside the traditional conventions of defining property types, implements are also expected to define _two_ additional fields in the array; a `Component` field, and a `style` field, i.e.:
+
+```javascript
+inlets: {
+  MyNumericInput: [
+    PropTypes.number.isRequired,
+    SomeComponentToDraw,
+    someStyleToDetermineWhereComponentIsDrawn,
+  ],
+}
+```
+
+These are helped to exert fine tuning and customization of the wiring process; implementors can define _exactly_ the position they want [react-dfd]() to wire to, meanwhile the specified component will help the readability of your block; you can define a custom wire termination component.
+
+**Please note**, these are _not_ a drop-in replacement for PropTypes; these are **only** used to define the configuration of properties which you intend _to wire between_. You must keep in mind that is perfectly legal to pass non-wired props into dataflow components; these therefore need type checking independently of what is provided by [react-dfd]().
+
+### withFlow(Component: required)
+
+`withFlow` is used to allocate a particular React Component with all of the required context to be treated and rendered as a dataflow element. When rendered, the dataflow diagram will decide where on screen to render this component based upon the surrounding context, and magically connect all of the defined wires.
+
+Any components wrapped `withFlow` **must** define static `flowProps`, otherwise this call will fail to complete.
+
+### withFlowDiagram(Component: required)
+This is the top-level [HOC](https://reactjs.org/docs/higher-order-components.html) which must wrap the root of your diagram, as it provides all of the global functionality and shared resources in order to generate and synchronize your dataflow diagram.
 
 ## ✌️ License
 [MIT]()

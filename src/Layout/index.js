@@ -63,36 +63,6 @@ const LayoutHocs = Object
     },
   );
 
-const throwOnInvalidProps = (diagramProps) => {
-  if (!diagramProps || typeof diagramProps !== 'object') {
-    throw new Error(
-      `react-dfd: A <Component /> wrapped withLayout did not define valid static diagramProps. Expected object, encountered ${diagramProps}.`,
-    );
-  }
-  const { type } = diagramProps;
-  if (Object.values(LayoutTypes).indexOf(type) < 0) {
-    throw new Error(
-      `react-dfd: diagramProps must define a valid string "type" property. Expected one of ${JSON.stringify(Object.values(LayoutTypes))}, encountered ${type}.`,
-    );
-  }
-  switch (type) {
-    case LayoutTypes.Node:
-      const { width, height } = diagramProps;
-      if (isNaN(width) || width <= 0) {
-        throw new Error(
-          `react-dfd: A <Component /> of type Node must define a positive numeric width property. Encountered: ${JSON.stringify(width)}.`,
-        );
-      } else if (isNaN(height) || height <= 0) {
-        throw new Error(
-          `react-dfd: A <Component /> of type Node must define a positive numeric height property. Encountered: ${JSON.stringify(height)}.`,
-        );
-      }
-    break;
-    default:
-      /* diagramProps have passed validation  */
-  }
-};
-
 const useLayouts = (arrayOfConfig) => {
   const [ arr ] = useState(
     () => [],
@@ -114,7 +84,7 @@ const useLayouts = (arrayOfConfig) => {
         );
         arrayOfConfig
           .map(
-            ([ parentId, layoutId, diagramProps ], i) => {
+            ([ parentId, layoutId, flowProps ], i) => {
               const layoutKey = getLayoutKey(parentId, layoutId);
               const { setStyles } = nextStyles;
               const { [layoutKey]: setStyle } = setStyles;
@@ -124,7 +94,7 @@ const useLayouts = (arrayOfConfig) => {
                   setStyle,
                   parentId,
                   layoutKey,
-                  ...diagramProps,
+                  ...flowProps,
                 },
               );
             },
@@ -140,11 +110,10 @@ const useLayouts = (arrayOfConfig) => {
 };
 
 export const withLayout = (Component, layoutId) => (props) => {
-  const { diagramProps } = Component; 
-  throwOnInvalidProps(diagramProps);
   const parentId = useContext(ParentContext);
-  const { inlets, outlets } = diagramProps;
-  const { type } = diagramProps;
+  const { flowProps } = Component; 
+  const { inlets, outlets } = flowProps;
+  const { type } = flowProps;
   const [ HocComponent ] = useState(
     () => LayoutHocs[type](Component),
   );
@@ -166,9 +135,9 @@ export const withLayout = (Component, layoutId) => (props) => {
               // TODO: Need to define this somewhere appropriate.
               type: LayoutTypes.Node,
               ...absoluteFill(
-                isOutlet ? diagramProps.width * 0.5: 0,
+                isOutlet ? flowProps.width * 0.5: 0,
                 isOutlet ? Object.keys(outlets).indexOf(k) * 20 : Object.keys(inlets).indexOf(k) * 20,
-                diagramProps.width * 0.5,
+                flowProps.width * 0.5,
                 20,
               ),
               ...style,
@@ -188,10 +157,10 @@ export const withLayout = (Component, layoutId) => (props) => {
         parentId,
         layoutId,
         {
-          ...diagramProps,
+          ...flowProps,
           constraints: getConstraintsFor(
             layoutId,
-            diagramProps,
+            flowProps,
             terminalLayoutProps,
           ),
         },
@@ -199,10 +168,10 @@ export const withLayout = (Component, layoutId) => (props) => {
       ...Object
         .entries(terminalLayoutProps)
         .map(
-          ([k, diagramProps]) => ([
+          ([k, flowProps]) => ([
             layoutId,
             k,
-            diagramProps,
+            flowProps,
           ]),
         ),
     ],

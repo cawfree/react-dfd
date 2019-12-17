@@ -4,8 +4,34 @@ import { withWires } from 'react-dataflow';
 
 import { withLayout, LayoutTypes } from '../../Layout';
 
-const throwOnBadDiagramProps = (diagramProps) => {
-  // TODO: actually validate
+const throwOnBadFlowProps = (flowProps) => {
+  if (!flowProps || typeof flowProps !== 'object') {
+    throw new Error(
+      `react-dfd: A <Component /> wrapped withLayout did not define valid static flowProps. Expected object, encountered ${flowProps}.`,
+    );
+  }
+  const { type } = flowProps;
+  if (Object.values(LayoutTypes).indexOf(type) < 0) {
+    throw new Error(
+      `react-dfd: flowProps must define a valid string "type" property. Expected one of ${JSON.stringify(Object.values(LayoutTypes))}, encountered ${type}.`,
+    );
+  }
+  switch (type) {
+    case LayoutTypes.Node:
+      const { width, height } = flowProps;
+      if (isNaN(width) || width <= 0) {
+        throw new Error(
+          `react-dfd: A <Component /> of type Node must define a positive numeric width property. Encountered: ${JSON.stringify(width)}.`,
+        );
+      } else if (isNaN(height) || height <= 0) {
+        throw new Error(
+          `react-dfd: A <Component /> of type Node must define a positive numeric height property. Encountered: ${JSON.stringify(height)}.`,
+        );
+      }
+    break;
+    default:
+      /* flowProps have passed validation  */
+  }
 };
 
 const throwOnBadInletsOrOutlets = (inlets, outlets) => {
@@ -13,9 +39,9 @@ const throwOnBadInletsOrOutlets = (inlets, outlets) => {
 };
 
 export const withFlow = Component => ({ ...extraProps }) => { 
-  const { diagramProps } = Component;
-  throwOnBadDiagramProps(diagramProps);
-  const { inlets, outlets } = diagramProps;
+  const { flowProps } = Component;
+  throwOnBadFlowProps(flowProps);
+  const { inlets, outlets } = flowProps;
   throwOnBadInletsOrOutlets(inlets, outlets);
   const [ elementId ] = useState(
     () => uuidv4(),
@@ -37,9 +63,9 @@ export const withFlow = Component => ({ ...extraProps }) => {
         .assign(
           withWires(FlowableComponent, { key: elementId }),
           {
-            diagramProps: {
+            flowProps: {
               type: LayoutTypes.Node,
-              ...diagramProps,
+              ...flowProps,
               inlets: inlets ||{},
               outlets: outlets || {},
             },
