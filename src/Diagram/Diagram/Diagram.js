@@ -25,7 +25,9 @@ export const withFlow = Component => ({ ...extraProps }) => {
       const FlowableComponent = (props) => (
         <Component {...props} />
       );
-      FlowableComponent.exportPropTypes = outlets;
+      FlowableComponent.exportPropTypes = (
+        outlets || {}
+      );
       return FlowableComponent;
     },
   );
@@ -38,6 +40,8 @@ export const withFlow = Component => ({ ...extraProps }) => {
             diagramProps: {
               type: LayoutTypes.Node,
               ...diagramProps,
+              inlets: inlets ||{},
+              outlets: outlets || {},
             },
           },
         ),
