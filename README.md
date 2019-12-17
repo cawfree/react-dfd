@@ -32,11 +32,9 @@ Using [`yarn`]():
 yarn add react-dfd
 ```
 
-## 🎒 Preface
+## 🎒 Examples
 
 This project is a frontend compatible with [react-dataflow](https://github.com/cawfree/react-dataflow). If you haven't already, it's advisable to check out the [tutorial](https://github.com/cawfree/react-dataflow) on how to write applications for [React](https://github.com/facebook/react) using wires.
-
-## ✍️ Examples
 
 ### 💡 Simple Indicator
 
@@ -63,7 +61,7 @@ const LightBulb = ({ active }) => (
 // XXX: It is important to know the size of the component
 //      before rendering, so we need to provide the width
 //      and height.
-FlowBulb.diagramProps = {
+LightBulb.diagramProps = {
   width: 40,
   height: 40,
   // XXX: Inlets describe the configuration of input props which
@@ -97,6 +95,14 @@ const Toggle = ({ Export }) => {
       />
     </Export>
   );
+};
+
+Toggle.diagramProps = {
+  width: 55,
+  height: 28,
+  outlets: {
+    pressed: [PropTypes.bool, React.Fragment, { /* use default positioning */ }],
+  },
 };
 
 const FlowToggle = withFlow(Toggle);
