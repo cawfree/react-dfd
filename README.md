@@ -17,6 +17,7 @@ Clean, prettified and intuitive Dataflow Digrams for React.
   - Design dataflow algorithms using the React DOM directly:
     - You don't need to allocate any abstractions.
     - It abides by core React principles, so it behaves the way you'd expect it to.
+  - These aren't just static, predefined diagram elements; these are _real_ components, which can behave and interact however you want.
 
 ## 🚀 Getting Started
 
@@ -36,9 +37,11 @@ yarn add react-dfd
 
 This project is a frontend compatible with [react-dataflow](https://github.com/cawfree/react-dataflow). If you haven't already, it's advisable to check out the [tutorial](https://github.com/cawfree/react-dataflow) on how to write applications for [React](https://github.com/facebook/react) using wires.
 
+To summarize, [react-dataflow]() is a _data first_ perspective of React, whereby components represent actual elements of business logic. The overall functionality of your application is how these elements _are connected_. [react-dataflow]() states that it takes advantage of React's perceptive DOM diffing architecture to optimize and execute chains of dependent computation, and treats the ability to render an equivalent UI as a second-class citizen.
+
 ### 💡 Simple Indicator
 
-In this example, we'll hook up a simple switch to a light emitting diode. This is effectively the _graphical_ counterpart to [react-dataflow]()'s [business logic example](https://github.com/cawfree/react-dataflow#complete-example).
+In this example, we'll hook up a simple switch to a light emitting diode. This is effectively the _graphical_ counterpart to [react-dataflow]()'s [business logic example](https://github.com/cawfree/react-dataflow#complete-example). The reason this is a useful example is that you will find most applications where a dataflow processing model can be applied can normally be expressed as a circuit.
 
 ```javascript
 import React from 'react';
@@ -131,7 +134,6 @@ export default withFlowDiagram(
     />
   ),
 );
-
 ```
 
 ## ✌️ License
