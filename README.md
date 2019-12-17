@@ -1,11 +1,11 @@
-# react-dfd
+# 🔗 react-dfd
 Clean, prettified and intuitive Dataflow Digrams for React.
 
 <p align="center">
   <img src ="./assets/dfd.gif" width="442" height="270" alt="react-dfd"/>
 </p>
 
-## Why does this exist?
+## 🤔 Why does this exist?
 [react-dfd]() allows us to create [React](https://github.com/facebook/react) applications that rely upon the principles of _dataflow_, with the added benefit of being able to visualize the resultant diagrams.
 
   - This enables simple inspection of the relationships between modules of your app.
@@ -18,7 +18,7 @@ Clean, prettified and intuitive Dataflow Digrams for React.
     - You don't need to allocate any abstractions.
     - It abides by core React principles, so it behaves the way you'd expect it to.
 
-## Getting Started
+## 🚀 Getting Started
 
 Using [`npm`]():
 
@@ -32,13 +32,15 @@ Using [`yarn`]():
 yarn add react-dfd
 ```
 
-## Preface
+## 🎒 Preface
 
 This project is a frontend compatible with [react-dataflow](https://github.com/cawfree/react-dataflow). If you haven't already, it's advisable to check out the [tutorial](https://github.com/cawfree/react-dataflow) on how to write applications for [React](https://github.com/facebook/react) using wires.
 
-## Tutorial
+## ✍️ Examples
 
-### Simple Indicator
+### 💡 Simple Indicator
+
+In this example, we'll hook up a simple switch to a light emitting diode. This is effectively the _graphical_ counterpart to [react-dataflow]()'s [business logic example](https://github.com/cawfree/react-dataflow#complete-example).
 
 ```javascript
 import React from 'react';
@@ -126,7 +128,7 @@ export default withFlowDiagram(
 
 ```
 
-## License
+## ✌️ License
 [MIT]()
 
 <p align="center">
