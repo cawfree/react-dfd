@@ -160,10 +160,6 @@ export const withLayout = (Component, layoutId) => (props) => {
         (obj, k, i) => {
           const isOutlet = outlets.hasOwnProperty(k);
           const [_, Component, style ] = isOutlet? outlets[k] : inlets[k];
-          //const hasStyle = Array.isArray(def) && def[2] && typeof def[2] === 'object';
-          //const terminalStyle = hasStyle ? def[2] : {};
-          //const hasComponent = Array.isArray(def) && def[1] && typeof def[1] === 'function';
-          //const Component = hasComponent ? def[1] : Empty;
           return {
             ...obj,
             [k]: {

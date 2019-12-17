@@ -1,6 +1,24 @@
 # react-dfd
 Dataflow Digrams for React.
 
+<p align="center">
+  <img src ="./assets/dfd.gif" width="442" height="270" alt="react-dfd"/>
+</p>
+
+## Getting Started
+
+Using [`npm`]():
+
+```bash
+npm install --save react-dfd
+```
+
+Using [`yarn`]():
+
+```bash
+yarn add react-dfd
+```
+
 used with react-dataflow
 
 ## License
